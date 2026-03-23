@@ -1,0 +1,182 @@
+<section class="hero section" id="hero" aria-labelledby="hero-headline">
+  <div class="container hero__inner">
+
+    <div class="hero__content">
+      <p class="section-label reveal reveal--hero-copy">Cristofer Eichstadt · Desenvolvedor Full-Stack</p>
+
+      <h1 id="hero-headline" class="hero__headline text-display reveal reveal--hero-copy">
+        {{ hero.headline }}
+      </h1>
+
+      <p class="hero__sub reveal reveal--hero-copy">
+        @if (modeService.isHumanMode()) {
+          {{ hero.subHuman }}
+        } @else {
+          {{ hero.subDev }}
+        }
+      </p>
+
+      <div class="hero__ctas reveal reveal--hero-copy">
+        @if (contact.hasWhatsapp) {
+          <a
+            [href]="contact.whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-primary"
+            aria-label="Abrir WhatsApp"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Me manda uma mensagem
+          </a>
+        } @else {
+          <a
+            [href]="'mailto:' + contact.email"
+            class="btn-primary"
+            aria-label="Enviar email"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            Me manda um email
+          </a>
+        }
+
+        <button class="btn-secondary" (click)="scrollToProjects($event)" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+          Ver o que eu fiz
+        </button>
+      </div>
+
+      <div class="hero__metrics" role="list">
+        @for (metric of displayMetrics; track $index) {
+          <div class="hero__metric reveal reveal--boot reveal--metric-pop" role="listitem">
+            <span class="hero__metric-value">{{ metric.value }}</span>
+            <span class="hero__metric-label">{{ metric.label }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="hero__layers reveal reveal--hero-copy" aria-label="Camadas cobertas">
+        @for (layer of layers; track $index) {
+          <span class="hero__layer">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path [attr.d]="getIconPath(layer.icon)"/>
+            </svg>
+            {{ modeService.isHumanMode() ? layer.labelHuman : layer.label }}
+          </span>
+          @if (!$last) {
+            <span class="hero__layer-sep" aria-hidden="true">→</span>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="hero__terminal-wrap reveal reveal--boot reveal--hero-terminal">
+      <div
+        class="hero__terminal"
+        [class.hero__terminal--easter]="easterEgg.active()"
+        [class.hero__terminal--deny]="terminalPrank.active()"
+      >
+        <div class="hero__terminal-bar">
+          <button
+            class="hero__terminal-dot-btn"
+            type="button"
+            aria-label="Tentar fechar o console"
+            (click)="onTerminalCloseClick($event)"
+          >
+            <span class="hero__terminal-dot hero__terminal-dot--red"></span>
+          </button>
+          <span class="hero__terminal-dot hero__terminal-dot--yellow"></span>
+          <span class="hero__terminal-dot hero__terminal-dot--green"></span>
+          <span class="hero__terminal-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.6; margin-right: 4px; vertical-align: -1px;">
+              <polyline points="4 17 10 11 4 5"/>
+              <line x1="12" y1="19" x2="20" y2="19"/>
+            </svg>
+            ~/cristofer
+          </span>
+        </div>
+
+        <div class="hero__terminal-body">
+          @for (line of terminalLines; track $index) {
+            @if (line.visible) {
+              <div class="hero__terminal-line">
+                <div class="hero__terminal-entry">
+                  <div class="hero__terminal-command">
+                    <span class="hero__terminal-prefix" aria-hidden="true">></span>
+                    @if (line.showLeadCursor) {
+                      <span class="hero__terminal-line-cursor" aria-hidden="true"></span>
+                    }
+                    @if (line.showBot) {
+                      <svg class="hero__mini-bot hero__mini-bot--{{ $index + 1 }}" viewBox="0 0 16 20" width="14" height="18" fill="none">
+                        <line x1="8" y1="1" x2="8" y2="3.5" stroke="var(--accent-green)" stroke-width="1" stroke-linecap="round"/>
+                        <circle cx="8" cy="0.8" r="1.2" stroke="var(--accent-green)" stroke-width="0.8" fill="none"/>
+                        <rect x="3" y="3.5" width="10" height="7" rx="2" stroke="var(--accent-green)" stroke-width="0.8" fill="rgba(34,197,94,0.08)"/>
+                        <rect x="5" y="5.5" width="2.5" height="1.8" rx="0.5" fill="var(--accent-green)" opacity="0.9"/>
+                        <rect x="8.5" y="5.5" width="2.5" height="1.8" rx="0.5" fill="var(--accent-green)" opacity="0.9"/>
+                        <rect x="5.5" y="11" width="5" height="5" rx="1.5" stroke="var(--accent-green)" stroke-width="0.8" fill="rgba(34,197,94,0.05)"/>
+                        <circle cx="8" cy="13.5" r="0.8" fill="var(--accent-green)" opacity="0.6"/>
+                      </svg>
+                    }
+                    @if (line.showTyping) {
+                      <span class="hero__bot-typing" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </span>
+                    }
+                    @if (line.showCmd) {
+                      <span class="hero__terminal-cmd">{{ line.cmd }}</span>
+                    }
+                  </div>
+
+                  @if (line.showOut) {
+                    <span class="hero__terminal-out">{{ line.out }}</span>
+                  }
+                </div>
+              </div>
+            }
+          }
+
+          @if (easterEggLineVisible) {
+            <div class="hero__terminal-line hero__terminal-line--easter">
+              <div class="hero__terminal-entry">
+                <div class="hero__terminal-command">
+                  <span class="hero__terminal-prefix" aria-hidden="true">></span>
+                  @if (!easterEggLineOutputVisible) {
+                    <span class="hero__terminal-line-cursor hero__terminal-line-cursor--easter" aria-hidden="true"></span>
+                    <svg class="hero__mini-bot hero__mini-bot--easter" viewBox="0 0 16 20" width="14" height="18" fill="none">
+                      <line x1="8" y1="1" x2="8" y2="3.5" stroke="#fca5a5" stroke-width="1" stroke-linecap="round"/>
+                      <circle cx="8" cy="0.8" r="1.2" stroke="#fca5a5" stroke-width="0.8" fill="none"/>
+                      <rect x="3" y="3.5" width="10" height="7" rx="2" stroke="#fca5a5" stroke-width="0.8" fill="rgba(239,68,68,0.08)"/>
+                      <rect x="5" y="5.5" width="2.5" height="1.8" rx="0.5" fill="#fca5a5" opacity="0.9"/>
+                      <rect x="8.5" y="5.5" width="2.5" height="1.8" rx="0.5" fill="#fca5a5" opacity="0.9"/>
+                      <rect x="5.5" y="11" width="5" height="5" rx="1.5" stroke="#fca5a5" stroke-width="0.8" fill="rgba(239,68,68,0.05)"/>
+                      <circle cx="8" cy="13.5" r="0.8" fill="#fca5a5" opacity="0.6"/>
+                    </svg>
+                    <span class="hero__bot-typing hero__bot-typing--easter" aria-hidden="true">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </span>
+                  }
+                  <span class="hero__terminal-cmd hero__terminal-cmd--easter">{{ easterEggLine.cmd }}</span>
+                </div>
+
+                @if (easterEggLineOutputVisible) {
+                  <span class="hero__terminal-out hero__terminal-out--easter">{{ easterEggLine.out }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,132 @@
+<div class="lab">
+
+  <header class="lab__header">
+    <span class="lab__title">// robot.lab</span>
+    <span class="lab__state-badge">{{ activeState }}@if (activeProp !== 'none') { · {{ activeProp }} }</span>
+    <a href="/" class="lab__back">← voltar ao site</a>
+  </header>
+
+  <div class="lab__content">
+
+    <!-- ── Robot stage ──────────────────────────────── -->
+    <div class="lab__stage">
+      <div class="lab__robot-wrap">
+        <app-robot [labMode]="true"></app-robot>
+      </div>
+
+    </div>
+
+    <!-- ── Controls ─────────────────────────────────── -->
+    <div class="lab__controls">
+
+      <section class="lab__section">
+        <h3 class="lab__section-title">Estado</h3>
+        <div class="lab__grid">
+          @for (s of states; track s) {
+            <button
+              class="lab__btn"
+              [class.lab__btn--active]="activeState === s"
+              (click)="setState(s)"
+            >{{ s }}</button>
+          }
+        </div>
+      </section>
+
+      <section class="lab__section">
+        <h3 class="lab__section-title">Prop</h3>
+        <div class="lab__grid">
+          @for (p of props; track p) {
+            <button
+              class="lab__btn"
+              [class.lab__btn--active]="activeProp === p"
+              (click)="setProp(p)"
+            >{{ p }}</button>
+          }
+        </div>
+      </section>
+
+      <section class="lab__section">
+        <h3 class="lab__section-title">Olhos</h3>
+        <div class="lab__grid">
+          @for (e of eyes; track e) {
+            <button
+              class="lab__btn"
+              [class.lab__btn--active]="activeEye === e"
+              (click)="setEye(e)"
+            >{{ e }}</button>
+          }
+        </div>
+      </section>
+
+      <section class="lab__section">
+        <h3 class="lab__section-title">Velocidade · {{ animSpeed.toFixed(1) }}x</h3>
+        <div class="lab__slider-row">
+          <span class="lab__slider-label">0.1x</span>
+          <input
+            type="range"
+            class="lab__slider"
+            min="0.1" max="3" step="0.1"
+            [value]="animSpeed"
+            [disabled]="scrubMode"
+            (input)="setSpeed(+$any($event.target).value)"
+          />
+          <span class="lab__slider-label">3x</span>
+          <button class="lab__btn" [disabled]="scrubMode" (click)="setSpeed(1)">reset</button>
+        </div>
+      </section>
+
+      <section class="lab__section">
+        <h3 class="lab__section-title">
+          Timeline scrubber
+          <button
+            class="lab__btn lab__btn--scrub-toggle"
+            [class.lab__btn--active]="scrubMode"
+            (click)="toggleScrub()"
+          >{{ scrubMode ? '⏸ pausado' : '▶ play' }}</button>
+        </h3>
+        <div class="lab__slider-row">
+          <span class="lab__slider-label">0%</span>
+          <input
+            type="range"
+            class="lab__slider"
+            min="0" max="100" step="0.5"
+            [value]="scrubValue"
+            [disabled]="!scrubMode"
+            (input)="scrub(+$any($event.target).value)"
+          />
+          <span class="lab__slider-label">{{ scrubValue.toFixed(0) }}%</span>
+        </div>
+      </section>
+
+      <section class="lab__section">
+        <h3 class="lab__section-title">Efeitos</h3>
+        <div class="lab__effects">
+
+          <button
+            class="lab__btn lab__btn--effect"
+            [class.lab__btn--active]="isFlying"
+            (click)="toggleFly()"
+          >🔥 Voar {{ isFlying ? '(ON)' : '(OFF)' }}</button>
+
+          <button class="lab__btn lab__btn--effect" (click)="triggerSmoke()">
+            💨 Fumaça
+          </button>
+
+          <button class="lab__btn lab__btn--effect" (click)="triggerScan()">
+            🔦 Scan beam
+          </button>
+
+          <button class="lab__btn lab__btn--effect" (click)="triggerTeleport()">
+            ⚡ Teleport
+          </button>
+
+          <button class="lab__btn lab__btn--effect" (click)="togglePoint()">
+            👈 Apontar
+          </button>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>

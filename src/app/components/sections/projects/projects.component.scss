@@ -1,0 +1,382 @@
+.projects__header {
+  margin-bottom: var(--space-10);
+
+  h2 {
+    font-size: var(--text-h1);
+    color: var(--text-primary);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+}
+
+.projects__context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.projects__context-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.08);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent-green);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.projects__context-copy {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.reveal--projects-heading {
+  transform: translateY(22px);
+  filter: blur(4px);
+
+  &.revealed {
+    filter: blur(0);
+  }
+}
+
+.projects__intro {
+  font-size: var(--text-body-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+// Card glow border animation
+@keyframes cardBorderSpin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+// Base card
+.project-card {
+  // CSS vars for glow position (must be before nested rules)
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --project-signal-rgb: 34, 197, 94;
+
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  position: relative;
+  transition: border-color var(--duration-normal) var(--easing-default),
+              box-shadow var(--duration-normal) var(--easing-default),
+              transform var(--duration-normal) var(--easing-default);
+
+  @media (min-width: 768px) {
+    padding: var(--space-8);
+  }
+
+  // Glow pseudo-border on hover
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: calc(var(--radius-lg) + 1px);
+    background: linear-gradient(135deg, rgba(var(--project-signal-rgb), 0.92), #0A0A0B, rgba(var(--project-signal-rgb), 0.6), rgba(var(--project-signal-rgb), 0.9));
+    background-size: 300% 300%;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--easing-default);
+    z-index: 0;
+  }
+
+  // Inner bg to cover the glow border underneath content
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    z-index: 0;
+  }
+
+  // Mouse-follow shine overlay
+  .project-card__shine {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(var(--project-signal-rgb), 0.08) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-normal);
+    z-index: 1;
+  }
+
+  &:hover .project-card__shine {
+    opacity: 1;
+  }
+
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  &:hover {
+    border-color: transparent;
+    box-shadow: var(--elevation-2), 0 0 40px rgba(var(--project-signal-rgb), 0.16);
+
+    &::before {
+      opacity: 1;
+      animation: cardBorderSpin 3s ease infinite;
+    }
+  }
+
+  &[data-signal='field-sync'] {
+    --project-signal-rgb: 34, 197, 94;
+  }
+
+  &[data-signal='evidence-pdf'] {
+    --project-signal-rgb: 56, 189, 248;
+  }
+
+  &[data-signal='pipeline-webhook'] {
+    --project-signal-rgb: 245, 158, 11;
+  }
+
+  &[data-signal='silent-ops'] {
+    --project-signal-rgb: 148, 163, 184;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  &__role {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--accent-green);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(var(--project-signal-rgb), 0.2);
+    background: rgba(var(--project-signal-rgb), 0.08);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(var(--project-signal-rgb), 1);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &__logo {
+    height: 22px;
+    width: auto;
+    opacity: 0.6;
+    transition: opacity var(--duration-fast) var(--easing-default);
+    filter: brightness(0) invert(1);
+
+    :host-context([data-theme="light"]) & {
+      filter: brightness(0);
+    }
+
+    .project-card:hover & {
+      opacity: 0.9;
+    }
+
+    &--right {
+      margin-left: auto;
+    }
+
+    // Everflow: logo quadrada (icon mark), mesma regra de filtro mas tamanho ajustado
+    &[data-logo-key="everflow"] {
+      height: 28px;
+      width: auto;
+    }
+  }
+
+  &__title {
+    font-size: var(--text-h3);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-3);
+  }
+
+  &__sub {
+    font-size: var(--text-body-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-5);
+    transition: opacity var(--duration-slow) var(--easing-default);
+  }
+
+  &__bullets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    list-style: none;
+    padding: 0;
+  }
+
+  &__bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-body-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    transition: opacity var(--duration-slow) var(--easing-default);
+  }
+
+  &__bullet-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  &__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  &__case {
+    margin: 0;
+    padding: var(--space-5);
+    background: var(--bg-subtle);
+    border-left: 2px solid var(--accent-green);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+
+    p {
+      font-size: var(--text-body-sm);
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: var(--space-3);
+    }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--accent-green);
+    text-decoration: none;
+    transition: gap var(--duration-fast) var(--easing-default);
+
+    &:hover {
+      gap: var(--space-3);
+    }
+  }
+
+  // NDA specifics
+  &__nda-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--border-default);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  &__nda-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  &__nda-quote {
+    font-family: var(--font-mono);
+    font-size: var(--text-body-sm);
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.7;
+    padding: var(--space-4);
+    background: var(--bg-subtle);
+    border-radius: var(--radius-md);
+    margin: var(--space-4) 0;
+    border: 1px solid var(--border-subtle);
+  }
+}
+
+// Main card layout
+.project-card--main {
+  margin-bottom: var(--space-8);
+
+  .project-card__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+  }
+}
+
+// Secondary grid
+.projects__secondary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+// NDA card
+.project-card--nda {
+  border-style: dashed;
+  border-color: var(--border-default);
+  background: transparent;
+}

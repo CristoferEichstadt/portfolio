@@ -1,0 +1,13 @@
+@use 'styles/tokens';
+@use 'styles/reset';
+@use 'styles/typography';
+@use 'styles/utilities';
+
+@media (pointer: fine) {
+  .page-shell,
+  .page-shell *,
+  .page-shell *::before,
+  .page-shell *::after {
+    cursor: none !important;
+  }
+}

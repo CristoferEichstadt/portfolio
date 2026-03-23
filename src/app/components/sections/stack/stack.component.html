@@ -1,0 +1,75 @@
+<section class="stack section" id="stack" aria-labelledby="stack-heading">
+  <div class="container">
+
+    <div class="stack__header">
+      <div class="stack__context reveal reveal--inspect">
+        <span class="stack__context-pill">{{ chapter.progressLabel }}</span>
+        <span class="stack__context-copy">inventário técnico para app, web, api, dados e automação</span>
+      </div>
+      <p class="section-label reveal reveal--stack-heading">// arsenal</p>
+      <h2 id="stack-heading" class="reveal reveal--stack-heading">{{ modeService.isHumanMode() ? 'Ferramentas que entram quando a operação aperta' : 'Arsenal técnico para produto vivo' }}</h2>
+      <p class="stack__sub reveal reveal--stack-heading">
+        @if (modeService.isHumanMode()) {
+          Problemas reais, resolvidos com as ferramentas certas.
+        } @else {
+          Ferramentas que uso em contexto real, não só em tutorial.
+        }
+      </p>
+    </div>
+
+    <!-- Human mode: capability cards (always in DOM, toggled via CSS) -->
+    <div class="stack__capabilities" [class.stack__capabilities--hidden]="!modeService.isHumanMode()">
+      @for (cap of capabilities; track $index) {
+        <div class="stack__capability reveal reveal--inspect reveal--stack-card">
+          <span class="stack__capability-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path [attr.d]="getIconPath(cap.icon)"/>
+            </svg>
+          </span>
+          <div class="stack__capability-text">
+            <h3 class="stack__capability-title">{{ cap.title }}</h3>
+            <p class="stack__capability-desc">{{ cap.desc }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Dev mode: tech badges (always in DOM, toggled via CSS) -->
+    <div class="stack__grid" [class.stack__grid--hidden]="modeService.isHumanMode()">
+      @for (cat of stackCategories; track cat.category) {
+        <div class="stack__category reveal reveal--inspect reveal--stack-card">
+          <h3 class="stack__category-name">
+            <span class="stack__category-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </span>
+            {{ cat.category }}
+          </h3>
+          <div class="stack__badges">
+            @for (tech of cat.techs; track $index) {
+              <span class="badge">{{ tech }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Marquee strip (always visible) -->
+    <div class="stack__marquee" aria-hidden="true">
+      <div class="stack__marquee-track">
+        @for (tech of marqueeItems; track $index) {
+          <span class="stack__marquee-item">{{ tech }}</span>
+          <span class="stack__marquee-sep">·</span>
+        }
+        <!-- Duplicate for seamless loop -->
+        @for (tech of marqueeItems; track $index) {
+          <span class="stack__marquee-item">{{ tech }}</span>
+          <span class="stack__marquee-sep">·</span>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>

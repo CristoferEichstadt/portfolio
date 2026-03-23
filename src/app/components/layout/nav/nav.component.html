@@ -1,0 +1,97 @@
+<nav class="nav" role="navigation" aria-label="Navegação principal">
+  <div
+    class="container nav__inner"
+    [attr.data-accent]="narrative.activeChapter().accentSignal"
+  >
+
+    <!-- Logo / Name -->
+    <a
+      href="#"
+      class="nav__logo"
+      [class.nav__logo--active]="easterEggService.active()"
+      (click)="onLogoClick($event)"
+      aria-label="Início"
+    >
+      <img
+        class="nav__logo-mark"
+        src="favicon.svg"
+        width="30"
+        height="30"
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+      >
+    </a>
+
+    <!-- Links (desktop) -->
+    <ul class="nav__links" role="list">
+      @for (link of navLinks; track link.id) {
+        <li>
+          <a
+            [href]="'#' + link.id"
+            class="nav__link"
+            [class.nav__link--active]="isActive(link.id)"
+            (click)="scrollTo('#' + link.id, $event)"
+          >
+            <span class="nav__link-dot" aria-hidden="true"></span>
+            {{ link.navLabel }}
+          </a>
+        </li>
+      }
+    </ul>
+
+    <div class="nav__controls">
+      <!-- Toggle Human/Dev -->
+      <button
+        class="nav__toggle"
+        [class.nav__toggle--dev]="modeService.isDevMode()"
+        (click)="modeService.toggle()"
+        [attr.aria-label]="modeService.isDevMode() ? 'Mudar para modo Human' : 'Mudar para modo Dev'"
+        type="button"
+        title="Alternar perspectiva"
+      >
+        <span class="nav__toggle-option" [class.nav__toggle-option--active]="modeService.isHumanMode()">
+          <svg class="nav__toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          </svg>
+          Human
+        </span>
+        <span class="nav__toggle-option" [class.nav__toggle-option--active]="modeService.isDevMode()">
+          <svg class="nav__toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+          Dev
+        </span>
+        <span class="nav__toggle-indicator" aria-hidden="true"></span>
+      </button>
+
+      <!-- Theme toggle (sun/moon) -->
+      <button
+        class="nav__theme-btn"
+        (click)="themeService.toggle()"
+        [attr.aria-label]="themeService.theme() === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
+        type="button"
+      >
+        @if (themeService.theme() === 'dark') {
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        } @else {
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        }
+      </button>
+    </div>
+
+  </div>
+</nav>

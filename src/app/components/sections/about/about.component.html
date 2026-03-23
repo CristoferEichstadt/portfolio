@@ -1,0 +1,36 @@
+<section class="about section" id="about" aria-labelledby="about-heading">
+  <div class="container">
+
+    <div class="about__inner">
+      <div class="about__context reveal reveal--manifesto">
+        <span class="about__context-pill">{{ chapter.progressLabel }}</span>
+        <span class="about__context-copy">postura de trabalho antes de stack e discurso</span>
+      </div>
+      <p class="section-label reveal reveal--about-copy">// princípios</p>
+
+      <div class="about__fixed">
+        @for (line of about.fixed; track $index) {
+          <p class="about__fixed-line reveal reveal--manifesto reveal--about-line">{{ line }}</p>
+        }
+      </div>
+
+      <p class="about__variable reveal reveal--about-copy">
+        @if (modeService.isHumanMode()) {
+          {{ about.human }}
+        } @else {
+          {{ about.dev }}
+        }
+      </p>
+
+      <div class="about__badges">
+        @for (badge of about.badges; track $index) {
+          <span class="about__badge reveal reveal--manifesto reveal--about-badge">
+            <span class="about__badge-dot" aria-hidden="true"></span>
+            {{ badge }}
+          </span>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>

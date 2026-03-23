@@ -1,0 +1,184 @@
+<section class="projects section" id="projects" aria-labelledby="projects-heading">
+  <div class="container">
+
+    <div class="projects__header">
+      <div class="projects__context reveal reveal--editorial">
+        <span class="projects__context-pill">{{ chapter.progressLabel }}</span>
+        <span class="projects__context-copy">campo, evidência documental, enterprise e automação silenciosa</span>
+      </div>
+      <p class="section-label reveal reveal--projects-heading">// casos reais</p>
+      <h2 id="projects-heading" class="reveal reveal--projects-heading">Casos que seguram operação de verdade</h2>
+      <p class="projects__intro reveal reveal--projects-heading">Cada card aponta para um tipo de pressão real: rua, mídia, workflow enterprise ou rotina crítica. O contexto muda; o padrão de entrega não.</p>
+    </div>
+
+    <article class="project-card project-card--main reveal reveal--editorial reveal--left" [attr.aria-labelledby]="'project-' + mainProject.id + '-title'" [attr.data-signal]="mainProject.signal">
+      <div class="project-card__shine"></div>
+
+      <div class="project-card__header">
+        <div class="project-card__meta">
+          <span class="project-card__role">Case principal</span>
+          <span class="project-card__signal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path [attr.d]="getSignalPath(mainProject.signal)"/>
+            </svg>
+            {{ modeService.isHumanMode() ? mainProject.signalLabelHuman : mainProject.signalLabelDev }}
+          </span>
+        </div>
+        @if (mainProject.logo) {
+          <img
+            [src]="getLogoPath(mainProject.logo)"
+            [attr.data-logo-key]="mainProject.logo"
+            alt="Everflow"
+            class="project-card__logo project-card__logo--right"
+            width="28"
+            height="28"
+            loading="lazy"
+          />
+        }
+      </div>
+
+      <div class="project-card__body">
+        <div class="project-card__text">
+          <h3 [id]="'project-' + mainProject.id + '-title'" class="project-card__title">
+            {{ mainProject.title }}
+          </h3>
+          <p class="project-card__sub">
+            @if (modeService.isHumanMode()) { {{ mainProject.subHuman }}
+            } @else { {{ mainProject.subDev }} }
+          </p>
+          <ul class="project-card__bullets" role="list">
+            @for (bullet of (modeService.isHumanMode() ? mainProject.bulletsHuman : mainProject.bulletsDev); track $index) {
+              <li class="project-card__bullet">
+                <span class="project-card__bullet-dot" aria-hidden="true"></span>
+                {{ bullet }}
+              </li>
+            }
+          </ul>
+          <div class="project-card__stack">
+            @for (tech of (modeService.isHumanMode() ? mainProject.stackHuman : mainProject.stack); track $index) {
+              <span class="badge">{{ tech }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- Case quote -->
+        <blockquote class="project-card__case">
+          <p>
+            @if (modeService.isHumanMode()) { {{ mainProject.caseHuman }}
+            } @else { {{ mainProject.caseDev }} }
+          </p>
+          <footer>
+            @if (contact.hasWhatsapp) {
+              <a [href]="contact.whatsapp" target="_blank" rel="noopener noreferrer" class="project-card__cta">
+                Tem um desafio parecido? Me chama.
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            } @else {
+              <a [href]="'mailto:' + contact.email" class="project-card__cta">
+                Tem um desafio parecido? Me manda um email.
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            }
+          </footer>
+        </blockquote>
+      </div>
+
+    </article>
+
+    <!-- Secondary projects grid -->
+    <div class="projects__secondary">
+      @for (project of secondaryProjects; track project.id) {
+        <article class="project-card project-card--secondary reveal reveal--editorial" [class.reveal--left]="$even" [class.reveal--right]="$odd" [attr.aria-labelledby]="'project-' + project.id + '-title'" [attr.data-signal]="project.signal">
+          <div class="project-card__shine"></div>
+
+          <div class="project-card__header">
+            <div class="project-card__meta">
+              <span class="project-card__role">Atuação em produto real</span>
+              <span class="project-card__signal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path [attr.d]="getSignalPath(project.signal)"/>
+                </svg>
+                {{ modeService.isHumanMode() ? project.signalLabelHuman : project.signalLabelDev }}
+              </span>
+            </div>
+            @if (project.logo) {
+              <img
+                [src]="getLogoPath(project.logo)"
+                [attr.data-logo-key]="project.logo"
+                alt=""
+                class="project-card__logo"
+                loading="lazy"
+              />
+            }
+          </div>
+
+          <h3 [id]="'project-' + project.id + '-title'" class="project-card__title">
+            {{ project.title }}
+          </h3>
+
+          <p class="project-card__sub">
+            @if (modeService.isHumanMode()) { {{ project.subHuman }}
+            } @else { {{ project.subDev }} }
+          </p>
+
+          <ul class="project-card__bullets" role="list">
+            @for (bullet of (modeService.isHumanMode() ? project.bulletsHuman : project.bulletsDev); track $index) {
+              <li class="project-card__bullet">
+                <span class="project-card__bullet-dot" aria-hidden="true"></span>
+                {{ bullet }}
+              </li>
+            }
+          </ul>
+
+          <div class="project-card__stack">
+            @for (tech of (modeService.isHumanMode() ? project.stackHuman : project.stack); track $index) {
+              <span class="badge">{{ tech }}</span>
+            }
+          </div>
+
+        </article>
+      }
+    </div>
+
+    <!-- NDA card -->
+    <article class="project-card project-card--nda reveal reveal--editorial reveal--left" aria-labelledby="project-nda-title" [attr.data-signal]="ndaProject.signal">
+      <div class="project-card__nda-top">
+        <div class="project-card__nda-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          NDA
+        </div>
+        <span class="project-card__signal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path [attr.d]="getSignalPath(ndaProject.signal)"/>
+          </svg>
+          {{ modeService.isHumanMode() ? ndaProject.signalLabelHuman : ndaProject.signalLabelDev }}
+        </span>
+      </div>
+
+      <h3 id="project-nda-title" class="project-card__title">{{ ndaProject.title }}</h3>
+
+      <p class="project-card__sub">
+        @if (modeService.isHumanMode()) { {{ ndaProject.subHuman }}
+        } @else { {{ ndaProject.subDev }} }
+      </p>
+
+      <blockquote class="project-card__nda-quote">
+        "{{ ndaProject.quote }}"
+      </blockquote>
+
+      <div class="project-card__stack">
+        @for (tech of (modeService.isHumanMode() ? ndaProject.stackHuman : ndaProject.stack); track $index) {
+          <span class="badge">{{ tech }}</span>
+        }
+      </div>
+    </article>
+
+  </div>
+</section>

@@ -1,0 +1,32 @@
+@if (isLab) {
+  <app-robot-lab></app-robot-lab>
+} @else {
+  <div
+    class="page-shell"
+    [attr.data-mood]="narrative.activeChapter().mood"
+    [attr.data-accent]="narrative.activeChapter().accentSignal"
+  >
+    <!-- Custom cursor -->
+    <div class="cursor" [class.cursor--hover]="cursorHover" [style.left.px]="cursorX" [style.top.px]="cursorY"></div>
+    <div class="cursor-dot" [style.left.px]="cursorX" [style.top.px]="cursorY"></div>
+
+    <div class="progress-rail" [attr.aria-label]="'Capítulo atual: ' + narrative.activeChapter().progressLabel">
+      <div class="progress-rail__track">
+        <div class="progress-rail__bar" [style.width.%]="narrative.scrollProgress()"></div>
+      </div>
+    </div>
+
+    <app-nav></app-nav>
+
+    <main class="page-main">
+      <app-hero></app-hero>
+      <app-projects></app-projects>
+      <app-stack></app-stack>
+      <app-services></app-services>
+      <app-about></app-about>
+      <app-contact></app-contact>
+    </main>
+
+    <app-robot></app-robot>
+  </div>
+}

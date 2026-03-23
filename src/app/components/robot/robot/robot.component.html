@@ -1,0 +1,256 @@
+<div
+  class="robot-wrap"
+  [class.robot-wrap--visible]="isVisible()"
+  [class.robot-wrap--lab]="labMode()"
+  [class.robot-wrap--walking]="isWalking()"
+  [class.robot-wrap--pointing-left]="isPointingLeft()"
+  [class.robot-wrap--teleporting]="isTeleporting()"
+  [class.robot-wrap--deny]="isDenyingClose()"
+  [attr.data-state]="robotState()"
+  [attr.data-prop]="activeProp()"
+  [attr.data-eyes]="eyeDirection()"
+  [style.top.px]="robotY()"
+  [style.left.px]="robotX()"
+  [style.right]="robotX() !== null ? 'auto' : (24 - dodgeOffsetX()) + 'px'"
+  aria-hidden="true"
+  role="presentation"
+>
+  <div class="robot-shell">
+    @if (showSpeech()) {
+      <div class="robot-speech" aria-hidden="true">
+        {{ speechText() }}
+      </div>
+    }
+
+    <!-- ========================================= -->
+    <!-- PROPS — contextual objects per section    -->
+    <!-- ========================================= -->
+    <div class="robot-props" [style.opacity]="showSpeech() ? 0 : 1">
+      @if (activeProp() === 'terminal-cursor') {
+        <svg class="robot-prop robot-prop--terminal" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--accent-green)" stroke-width="1.5">
+          <polyline points="4 17 10 11 4 5"/>
+          <line x1="12" y1="19" x2="20" y2="19"/>
+        </svg>
+      }
+
+      @if (activeProp() === 'map') {
+        <div class="robot-prop robot-prop--map">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <svg class="robot-prop__route" viewBox="0 0 40 20" width="40" height="20" fill="none">
+            <path d="M2 10 Q10 2 20 10 Q30 18 38 10" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5">
+              <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite"/>
+            </path>
+            <circle r="2" fill="var(--accent-green)" opacity="0.8">
+              <animateMotion dur="2s" repeatCount="indefinite" path="M2 10 Q10 2 20 10 Q30 18 38 10"/>
+            </circle>
+          </svg>
+        </div>
+      }
+
+      @if (activeProp() === 'wrench') {
+        <svg class="robot-prop robot-prop--wrench" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      }
+
+      @if (activeProp() === 'toolbox') {
+        <svg class="robot-prop robot-prop--toolbox" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <line x1="12" y1="12" x2="12" y2="16"/>
+          <line x1="10" y1="14" x2="14" y2="14"/>
+        </svg>
+      }
+
+      @if (activeProp() === 'checkmark') {
+        <div class="robot-prop robot-prop--checkmark">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" stroke="var(--accent-cta)" opacity="0.3"/>
+            <path class="robot-prop__check-path" d="M8 12 L11 15 L16 9" stroke="var(--accent-cta)" fill="none"/>
+          </svg>
+        </div>
+      }
+    </div>
+
+    @if (showSmoke()) {
+      <div class="robot-smoke" aria-hidden="true">
+        <div class="smoke-puff smoke-puff--1"></div>
+        <div class="smoke-puff smoke-puff--2"></div>
+        <div class="smoke-puff smoke-puff--3"></div>
+      </div>
+    }
+
+    <svg
+      class="robot"
+      [class]="'robot robot--' + robotState()"
+      [attr.data-eyes]="eyeDirection()"
+      viewBox="0 0 80 120"
+      width="72"
+      height="108"
+      fill="none"
+      overflow="visible"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <radialGradient id="ftLo" gradientUnits="userSpaceOnUse" cx="28" cy="138" r="22">
+          <stop offset="0%"   stop-color="#FBBF24" stop-opacity="0.95"/>
+          <stop offset="40%"  stop-color="#EA580C" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#B91C1C" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="ftLc" gradientUnits="userSpaceOnUse" cx="28" cy="128" r="11">
+          <stop offset="0%"   stop-color="#FFFFFF"/>
+          <stop offset="55%"  stop-color="#FEF9C3"/>
+          <stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="ftRo" gradientUnits="userSpaceOnUse" cx="52" cy="138" r="22">
+          <stop offset="0%"   stop-color="#FBBF24" stop-opacity="0.95"/>
+          <stop offset="40%"  stop-color="#EA580C" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#B91C1C" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="ftRc" gradientUnits="userSpaceOnUse" cx="52" cy="128" r="11">
+          <stop offset="0%"   stop-color="#FFFFFF"/>
+          <stop offset="55%"  stop-color="#FEF9C3"/>
+          <stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <line class="robot__antenna-line" x1="40" y1="8" x2="40" y2="18" stroke-width="1.5" stroke-linecap="round"/>
+      <circle class="robot__antenna-tip" cx="40" cy="5" r="3.5" stroke-width="1.5"/>
+
+      <g class="robot__head-rig" style="transform-origin: 40px 52px;">
+        <g class="robot__head-group">
+          <rect class="robot__head" x="22" y="18" width="36" height="28" rx="6" stroke-width="1.5"/>
+
+          <g class="robot__eyes-group" [attr.transform]="'translate(' + eyeTranslateX() + ',' + eyeTranslateY() + ')'">
+            <rect class="robot__eye robot__eye--left"  x="27" y="26" width="10" height="7" rx="2"/>
+            <rect class="robot__eye robot__eye--right" x="43" y="26" width="10" height="7" rx="2"/>
+            <rect class="robot__eye-shine" x="28.5" y="27" width="2.5" height="1.5" rx="0.6" fill="rgba(255,255,255,0.55)" aria-hidden="true"/>
+            <rect class="robot__eye-shine" x="44.5" y="27" width="2.5" height="1.5" rx="0.6" fill="rgba(255,255,255,0.55)" aria-hidden="true"/>
+          </g>
+
+          <rect class="robot__mouth" x="29" y="38" width="22" height="3" rx="1.5"/>
+        </g>
+
+        <rect class="robot__neck" x="37" y="46" width="6" height="7" rx="1" stroke-width="1.5" stroke="var(--text-secondary)" fill="transparent"/>
+      </g>
+
+      @if (scanBeamActive()) {
+        <g class="robot-scan" aria-hidden="true">
+          <circle class="robot-scan__origin" cx="27" cy="29" r="4.2"/>
+          <path class="robot-scan__cone robot-scan__cone--soft" d="M26 29 L-96 10 L-96 48 Z"/>
+          <path class="robot-scan__cone robot-scan__cone--core" d="M26 29 L-96 20 L-96 38 Z"/>
+          <line class="robot-scan__glow" x1="26" y1="29" x2="-96" y2="29"/>
+          <line class="robot-scan__core" x1="26" y1="29" x2="-96" y2="29"/>
+          <circle class="robot-scan__pulse" cx="-96" cy="29" r="2.5"/>
+        </g>
+      }
+
+      <g class="robot__torso-rig" style="transform-origin: 40px 71px;">
+        <rect class="robot__body" x="14" y="52" width="52" height="38" rx="8" stroke-width="1.5"/>
+
+        <rect class="robot__chest" x="28" y="60" width="24" height="14" rx="4" stroke-width="1.5"/>
+        <circle class="robot__chest-dot robot__chest-dot--1" cx="34" cy="67" r="2.5"/>
+        <circle class="robot__chest-dot robot__chest-dot--2" cx="40" cy="67" r="2.5"/>
+        <circle class="robot__chest-dot robot__chest-dot--3" cx="46" cy="67" r="2.5"/>
+
+        <g class="robot__arm-group robot__arm-group--left" style="transform-origin: 14px 58px;">
+          <rect class="robot__arm" x="2" y="54" width="12" height="26" rx="6" stroke-width="1.5"/>
+          <circle class="robot__hand robot__hand--left" cx="8" cy="83" r="4.5" stroke-width="1.5"/>
+        </g>
+
+        <g class="robot__arm-group robot__arm-group--right" style="transform-origin: 66px 58px;">
+          <rect class="robot__arm" x="66" y="54" width="12" height="26" rx="6" stroke-width="1.5"/>
+          <circle class="robot__hand robot__hand--right" cx="72" cy="83" r="4.5" stroke-width="1.5"/>
+        </g>
+      </g>
+
+      <g class="robot__leg-group robot__leg-group--left" style="transform-origin: 29px 92px;">
+        <rect class="robot__leg" x="22" y="92" width="14" height="22" rx="6" stroke-width="1.5"/>
+        @if (showFlame() || showTrail()) {
+          <g class="ft-group ft-group--l">
+            @if (showFlame()) {
+              <ellipse class="ft-halo ft-halo--l" cx="28" cy="122" rx="7" ry="2.5" fill="#FBBF24" opacity="0.3"/>
+              <path class="ft-jet ft-jet--l" d="M28 122 C21 127 19 138 28 154 C37 138 35 127 28 122Z" fill="url(#ftLo)"/>
+              <path class="ft-mid ft-mid--l" d="M28 123 C24 128 22 137 28 150 C34 137 32 128 28 123Z" fill="url(#ftLo)" opacity="0.7"/>
+              <path class="ft-core ft-core--l" d="M28 124 C26 128 25 135 28 146 C31 135 30 128 28 124Z" fill="url(#ftLc)"/>
+              <circle cx="28" cy="122" r="3" fill="#FFFFFF" opacity="0.35" class="ft-nozzle"/>
+            }
+            <circle class="ft-spark ft-spark--l1" cx="28" cy="127" r="1.3" fill="#FDE68A"/>
+            <circle class="ft-spark ft-spark--l2" cx="28" cy="130" r="1.0" fill="#FEF9C3"/>
+            <circle class="ft-spark ft-spark--l3" cx="28" cy="134" r="0.8" fill="#FFFFFF"/>
+            <circle class="ft-spark ft-spark--l4" cx="28" cy="138" r="1.1" fill="#FDE68A"/>
+            <circle class="ft-spark ft-spark--l5" cx="28" cy="125" r="0.9" fill="#FFFFFF"/>
+          </g>
+        }
+        <rect class="robot__foot" x="18" y="114" width="20" height="8" rx="4" stroke-width="1.5"/>
+      </g>
+
+      <g class="robot__leg-group robot__leg-group--right" style="transform-origin: 51px 92px;">
+        <rect class="robot__leg" x="44" y="92" width="14" height="22" rx="6" stroke-width="1.5"/>
+        @if (showFlame() || showTrail()) {
+          <g class="ft-group ft-group--r">
+            @if (showFlame()) {
+              <ellipse class="ft-halo ft-halo--r" cx="52" cy="122" rx="7" ry="2.5" fill="#FBBF24" opacity="0.3"/>
+              <path class="ft-jet ft-jet--r" d="M52 122 C45 127 43 138 52 154 C61 138 59 127 52 122Z" fill="url(#ftRo)"/>
+              <path class="ft-mid ft-mid--r" d="M52 123 C48 128 46 137 52 150 C58 137 56 128 52 123Z" fill="url(#ftRo)" opacity="0.7"/>
+              <path class="ft-core ft-core--r" d="M52 124 C50 128 49 135 52 146 C55 135 54 128 52 124Z" fill="url(#ftRc)"/>
+              <circle cx="52" cy="122" r="3" fill="#FFFFFF" opacity="0.35" class="ft-nozzle"/>
+            }
+            <circle class="ft-spark ft-spark--r1" cx="52" cy="127" r="1.3" fill="#FDE68A"/>
+            <circle class="ft-spark ft-spark--r2" cx="52" cy="130" r="1.0" fill="#FEF9C3"/>
+            <circle class="ft-spark ft-spark--r3" cx="52" cy="134" r="0.8" fill="#FFFFFF"/>
+            <circle class="ft-spark ft-spark--r4" cx="52" cy="138" r="1.1" fill="#FDE68A"/>
+            <circle class="ft-spark ft-spark--r5" cx="52" cy="125" r="0.9" fill="#FFFFFF"/>
+          </g>
+        }
+        <rect class="robot__foot" x="42" y="114" width="20" height="8" rx="4" stroke-width="1.5"/>
+      </g>
+    </svg>
+
+    @if (activeProp() === 'browsers' || robotState() === 'spy') {
+      <div class="robot-browsers">
+        <svg class="robot-browser robot-browser--1" viewBox="0 0 28 20" width="28" height="20">
+          <rect x="0.5" y="0.5" width="27" height="19" rx="2" stroke="var(--accent-green)" stroke-width="0.8" fill="rgba(34,197,94,0.05)"/>
+          <line x1="0.5" y1="5" x2="27.5" y2="5" stroke="var(--accent-green)" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="4" cy="2.8" r="1" fill="var(--semantic-error)" opacity="0.6"/>
+          <circle cx="7.5" cy="2.8" r="1" fill="var(--semantic-warning)" opacity="0.6"/>
+          <circle cx="11" cy="2.8" r="1" fill="var(--accent-green)" opacity="0.6"/>
+          <rect x="3" y="8" width="12" height="1.5" rx="0.5" fill="var(--accent-green)" opacity="0.3"/>
+          <rect x="3" y="11" width="8" height="1.5" rx="0.5" fill="var(--accent-green)" opacity="0.2"/>
+          <rect x="3" y="14" width="18" height="1.5" rx="0.5" fill="var(--accent-green)" opacity="0.15"/>
+        </svg>
+        <svg class="robot-browser robot-browser--2" viewBox="0 0 28 20" width="24" height="17">
+          <rect x="0.5" y="0.5" width="27" height="19" rx="2" stroke="var(--accent-green)" stroke-width="0.8" fill="rgba(34,197,94,0.05)"/>
+          <line x1="0.5" y1="5" x2="27.5" y2="5" stroke="var(--accent-green)" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="4" cy="2.8" r="1" fill="var(--semantic-error)" opacity="0.6"/>
+          <circle cx="7.5" cy="2.8" r="1" fill="var(--semantic-warning)" opacity="0.6"/>
+          <circle cx="11" cy="2.8" r="1" fill="var(--accent-green)" opacity="0.6"/>
+          <rect x="3" y="8" width="16" height="1.5" rx="0.5" fill="var(--accent-green)" opacity="0.2"/>
+          <rect x="3" y="11" width="10" height="1.5" rx="0.5" fill="var(--accent-green)" opacity="0.3"/>
+        </svg>
+        <svg class="robot-browser robot-browser--3" viewBox="0 0 28 20" width="20" height="14">
+          <rect x="0.5" y="0.5" width="27" height="19" rx="2" stroke="var(--accent-green)" stroke-width="0.8" fill="rgba(34,197,94,0.05)"/>
+          <line x1="0.5" y1="5" x2="27.5" y2="5" stroke="var(--accent-green)" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="4" cy="2.8" r="1" fill="var(--semantic-error)" opacity="0.6"/>
+          <circle cx="7.5" cy="2.8" r="1" fill="var(--semantic-warning)" opacity="0.6"/>
+          <circle cx="11" cy="2.8" r="1" fill="var(--accent-green)" opacity="0.6"/>
+          <rect x="3" y="8" width="14" height="1.5" rx="0.5" fill="var(--accent-green)" opacity="0.25"/>
+        </svg>
+      </div>
+    }
+
+    @if (isTeleporting()) {
+      <div class="robot-teleport" aria-hidden="true">
+        <span class="robot-teleport__flash"></span>
+        <span class="robot-teleport__glow"></span>
+        <span class="robot-teleport__ring robot-teleport__ring--1"></span>
+        <span class="robot-teleport__ring robot-teleport__ring--2"></span>
+        <span class="robot-teleport__slice robot-teleport__slice--1"></span>
+        <span class="robot-teleport__slice robot-teleport__slice--2"></span>
+      </div>
+    }
+  </div>
+</div>
