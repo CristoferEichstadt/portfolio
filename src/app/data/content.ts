@@ -176,7 +176,7 @@ export const hero = {
   subHuman: 'Já resolvi problema de campo, de escritório, de automação e de relatório. Se tem um processo travado ou um sistema pra construir, eu entro e faço funcionar.',
   subDev: 'Mobile, web, API, automação, dashboard — já atuei em todos esses contextos em produção. Angular, React Native, .NET, Spring Boot, Selenium. Entro onde o problema está.',
   metrics: [
-    { value: '3+', label: 'Anos em projetos em produção' },
+    { value: '5+', label: 'Anos em projetos em produção' },
     { value: '12+', label: 'Integrações em contexto real' },
     { value: '4', label: 'Frentes: Web, Mobile, API e Portal' },
   ] as Metric[],
@@ -337,6 +337,32 @@ export const projects: Project[] = [
     priority: 'supporting',
     signalLabelHuman: 'fluxo / automação / operação',
     signalLabelDev: 'pipeline / webhook / jobs',
+  },
+  {
+    id: 'edda-sistema',
+    title: 'CRM e relatórios técnicos para uma operação industrial que precisa transformar serviço em evidência',
+    subHuman: 'CRM completo para clientes, orçamentos e histórico de serviços, com relatórios técnicos em PDF que reúnem fotos e medições.',
+    subDev: 'Aplicação full-stack com React, Node.js, PostgreSQL, autenticação, permissões, uploads, geração de PDFs e ambiente Docker.',
+    bulletsHuman: [
+      'Centraliza clientes, orçamentos e o histórico de cada serviço',
+      'Transforma fotos e medições da manutenção em relatórios profissionais',
+      'Organiza a rotina comercial e técnica do primeiro contato à entrega',
+    ],
+    bulletsDev: [
+      'CRM com clientes, contatos, orçamentos, catálogo de peças e serviços',
+      'Geração de PDFs técnicos com fotos, medições e identidade visual do cliente',
+      'Autenticação JWT, permissões, uploads, PostgreSQL, testes e Docker',
+    ],
+    caseHuman: 'Aqui a autoria é integral: desenhei e construí a base que conecta a gestão do cliente à prova técnica entregue após cada serviço.',
+    caseDev: 'Case de autoria integral em produto full-stack: CRM, gestão comercial, relatórios técnicos, PDF, uploads, autenticação e infraestrutura de desenvolvimento.',
+    stack: ['React', 'Node.js', 'Express', 'PostgreSQL', 'PDFKit', 'Docker'],
+    stackHuman: ['CRM completo', 'Orçamentos', 'Relatórios em PDF', 'Fotos e medições'],
+    role: 'secondary',
+    signal: 'evidence-pdf',
+    mood: 'evidence',
+    priority: 'supporting',
+    signalLabelHuman: 'crm / relatório / evidência',
+    signalLabelDev: 'crm / pdf / uploads',
   },
 ];
 
